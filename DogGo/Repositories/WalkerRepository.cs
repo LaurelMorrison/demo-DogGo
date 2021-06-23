@@ -108,79 +108,115 @@ namespace DogGo.Repositories
             }
         }
 
-        //public void AddOwner(Owner owner)
-        //{
-        //    using (SqlConnection conn = Connection)
-        //    {
-        //        conn.Open();
-        //        using (SqlCommand cmd = conn.CreateCommand())
-        //        {
-        //            cmd.CommandText = @"
-        //            INSERT INTO Owner ([Name], Email, Phone, Address, NeighborhoodId)
-        //            OUTPUT INSERTED.ID
-        //            VALUES (@name, @email, @phoneNumber, @address, @neighborhoodId);
-        //        ";
+        public void AddWalker(Walker walker)
+        {
+            using (SqlConnection conn = Connection)
+            {
+                conn.Open();
+                using (SqlCommand cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = @"
 
-        //            cmd.Parameters.AddWithValue("@name", owner.Name);
-        //            cmd.Parameters.AddWithValue("@email", owner.Email);
-        //            cmd.Parameters.AddWithValue("@phoneNumber", owner.Phone);
-        //            cmd.Parameters.AddWithValue("@address", owner.Address);
-        //            cmd.Parameters.AddWithValue("@neighborhoodId", owner.NeighborhoodId);
+                    INSERT INTO Walker ([Name], ImageUrl, NeighborhoodId)
+                    OUTPUT INSERTED.ID
+                    VALUES (@name, @ImageUrl, @neighborhoodId);
+                ";
 
-        //            int id = (int)cmd.ExecuteScalar();
+                    cmd.Parameters.AddWithValue("@name", walker.Name);
+                    cmd.Parameters.AddWithValue("@imageUrl", walker.ImageUrl);
+                    cmd.Parameters.AddWithValue("@neighborhoodId", walker.NeighborhoodId);
 
-        //            owner.Id = id;
-        //        }
-        //    }
-        //}
+                    int id = (int)cmd.ExecuteScalar();
 
-        //public void UpdateOwner(Owner owner)
-        //{
-        //    using (SqlConnection conn = Connection)
-        //    {
-        //        conn.Open();
+                    walker.Id = id;
+                }
+            }
+        }
 
-        //        using (SqlCommand cmd = conn.CreateCommand())
-        //        {
-        //            cmd.CommandText = @"
-        //                    UPDATE Walker
-        //                    SET 
-        //                        [Name] = @name, 
-        //                        Email = @email, 
-        //                        Address = @address, 
-        //                        Phone = @phone, 
-        //                        NeighborhoodId = @neighborhoodId
-        //                    WHERE Id = @id";
+        public void UpdateWalker(Walker walker)
+        {
+            using (SqlConnection conn = Connection)
+            {
+                conn.Open();
 
-        //            cmd.Parameters.AddWithValue("@name", owner.Name);
-        //            cmd.Parameters.AddWithValue("@email", owner.Email);
-        //            cmd.Parameters.AddWithValue("@address", owner.Address);
-        //            cmd.Parameters.AddWithValue("@phone", owner.Phone);
-        //            cmd.Parameters.AddWithValue("@neighborhoodId", owner.NeighborhoodId);
-        //            cmd.Parameters.AddWithValue("@id", owner.Id);
+                using (SqlCommand cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = @"
+                            UPDATE Walker
+                            SET 
+                                [Name] = @name, 
+                                ImageUrl = @imageUrl,  
+                                NeighborhoodId = @neighborhoodId
+                            WHERE Id = @id";
 
-        //            cmd.ExecuteNonQuery();
-        //        }
-        //    }
-        //}
+                    cmd.Parameters.AddWithValue("@name", walker.Name);
+                    cmd.Parameters.AddWithValue("@imageUrl", walker.ImageUrl);
+                    cmd.Parameters.AddWithValue("@neighborhoodId", walker.NeighborhoodId);
+                    cmd.Parameters.AddWithValue("@id", walker.Id);
 
-        //public void DeleteWalker(int walkerId)
-        //{
-        //    using (SqlConnection conn = Connection)
-        //    {
-        //        conn.Open();
+                    cmd.ExecuteNonQuery();
+                }
+            }
+        }
 
-        //        using (SqlCommand cmd = conn.CreateCommand())
-        //        {
-        //            cmd.CommandText = @"
-        //                    DELETE FROM Walker
-        //                    WHERE Id = @id
-        //                ";
+        public void DeleteWalker(int walkerId)
+        {
+            using (SqlConnection conn = Connection)
+            {
+                conn.Open();
 
-        //            cmd.Parameters.AddWithValue("@id", walkerId);
+                using (SqlCommand cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = @"
+                            DELETE FROM Walker
+                            WHERE Id = @id
+                        ";
 
-        //            cmd.ExecuteNonQuery();
-        //        }
+                    cmd.Parameters.AddWithValue("@id", walkerId);
+
+                    cmd.ExecuteNonQuery();
+                }
+
+            }
+        }
+
+        public List<Walker> GetWalkersInNeighborhood(int neighborhoodId)
+        {
+            using (SqlConnection conn = Connection)
+            {
+                conn.Open();
+                using (SqlCommand cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = @"
+                        SELECT Id, [Name], ImageUrl, NeighborhoodId
+                        FROM Walker
+                        WHERE NeighborhoodId = @neighborhoodId
+                    ";
+
+                    cmd.Parameters.AddWithValue("@neighborhoodId", neighborhoodId);
+
+                    SqlDataReader reader = cmd.ExecuteReader();
+
+                    List<Walker> walkers = new List<Walker>();
+                    while (reader.Read())
+                    {
+                        Walker walker = new Walker
+                        {
+                            Id = reader.GetInt32(reader.GetOrdinal("Id")),
+                            Name = reader.GetString(reader.GetOrdinal("Name")),
+                            ImageUrl = reader.GetString(reader.GetOrdinal("ImageUrl")),
+                            NeighborhoodId = reader.GetInt32(reader.GetOrdinal("NeighborhoodId"))
+                        };
+
+                        walkers.Add(walker);
+                    }
+
+                    reader.Close();
+
+                    return walkers;
+                }
+            }
+        }
 
     }
 }
