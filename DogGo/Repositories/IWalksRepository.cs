@@ -6,9 +6,11 @@ using System.Threading.Tasks;
 
 namespace DogGo.Repositories
 {
-    public interface IWalkRepository
+    public interface IWalksRepository
     {
-        List<Walk> GetWalksByWalkerId(int WalkerId);
+        List<Walks> GetAllWalks();
+
+        List<Walks> GetWalksByWalkerId(int id);
 
     }
 }
