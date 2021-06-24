@@ -438,3 +438,4 @@ C:\Users\Laurel\source\repos\DogGo\DogGo\obj\Debug\net5.0\Razor\Views\Dogs\Edit.
 C:\Users\Laurel\source\repos\DogGo\DogGo\obj\Debug\net5.0\Razor\Views\Walkers\Create.cshtml.g.cs
 C:\Users\Laurel\source\repos\DogGo\DogGo\obj\Debug\net5.0\Razor\Views\Walkers\Edit.cshtml.g.cs
 C:\Users\Laurel\source\repos\DogGo\DogGo\obj\Debug\net5.0\Razor\Views\Walkers\Delete.cshtml.g.cs
+C:\Users\Laurel\source\repos\DogGo\DogGo\obj\Debug\net5.0\Razor\Views\Walks\Index.cshtml.g.cs

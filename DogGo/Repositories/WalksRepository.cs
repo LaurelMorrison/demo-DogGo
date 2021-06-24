@@ -30,7 +30,10 @@ namespace DogGo.Repositories
                 conn.Open();
                 using (SqlCommand cmd = conn.CreateCommand())
                 {
-                    cmd.CommandText = @"SELECT Id, Name FROM Walks";
+                    cmd.CommandText = @"SELECT w.Id, w.Duration, w.Date, w.WalkerId, w.DogId, d.Name, wr.Name
+                                        FROM Walks w
+                                        LEFT JOIN Dog d ON w.DogId = d.Id
+                                        LEFT JOIN WALKER wr ON w.WalkerId = wr.Id   ";
 
                     SqlDataReader reader = cmd.ExecuteReader();
 
