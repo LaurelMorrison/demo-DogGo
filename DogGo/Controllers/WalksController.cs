@@ -16,16 +16,15 @@ namespace DogGo.Controllers
     {
 
         private readonly IWalksRepository _walksRepo;
-        private readonly IWalkerRepository _walkerRepo;
         private readonly IDogRepository _dogRepo;
 
         public WalksController(
             IWalksRepository walksRepository,
-            IWalkerRepository walkerRepository,
+
             IDogRepository dogRepository)
         {
             _walksRepo = walksRepository;
-            _walkerRepo = walkerRepository;
+
             _dogRepo = dogRepository;
 
         }

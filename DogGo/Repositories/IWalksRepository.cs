@@ -12,7 +12,7 @@ namespace DogGo.Repositories
 
         List<Walks> GetWalksByWalkerId(int id);
 
-        void AddWalks(Walks walks);
+        //void AddWalks(Walks walks);
 
     }
 }
