@@ -1,5 +1,6 @@
 ﻿using DogGo.Models;
 using DogGo.Repositories;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.SqlClient;
@@ -7,6 +8,7 @@ using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 
@@ -22,14 +24,23 @@ namespace DogGo.Controllers
         {
             _dogRepo = dogRepository;
         }
+        private int GetCurrentUserId()
+        {
+            string id = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            return int.Parse(id);
+        }
 
         // GET: OwnersController
+        [Authorize]
         public ActionResult Index()
         {
-            List<Dog> dogs = _dogRepo.GetAllDogs();
+            int ownerId = GetCurrentUserId();
+
+            List<Dog> dogs = _dogRepo.GetDogsByOwnerId(ownerId);
 
             return View(dogs);
         }
+
 
         // GET: DogsController/Details/5
         public ActionResult Details(int id)
@@ -46,6 +57,7 @@ namespace DogGo.Controllers
 
         // GET: DogsController/Create
         // GET: /Dogs/Create
+        [Authorize]
         public IActionResult Create()
         {
             return View();
@@ -58,6 +70,9 @@ namespace DogGo.Controllers
         {
             try
             {
+                // update the dogs OwnerId to the current user's Id
+                dog.OwnerId = GetCurrentUserId();
+
                 _dogRepo.AddDog(dog);
 
                 return RedirectToAction("Index");
@@ -68,8 +83,9 @@ namespace DogGo.Controllers
             }
         }
 
-        // GET: Dog/Edit/5
 
+        // GET: Dog/Edit/5
+        [Authorize]
         public ActionResult Edit(int id)
         {
             Dog dog = _dogRepo.GetDogById(id);
@@ -84,6 +100,7 @@ namespace DogGo.Controllers
         // POST: DogsController/Edit/5
         // POST: Dogs/Edit/5
         [HttpPost]
+        [Authorize]
         [ValidateAntiForgeryToken]
         public ActionResult Edit(int id, Dog dog)
         {
